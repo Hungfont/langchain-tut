@@ -3,25 +3,18 @@ from dotenv import load_dotenv
 from langchain_deepseek import ChatDeepSeek
 
 from langchain.agents import create_agent
-from langchain.tools import tool
 from langchain_core.messages import HumanMessage
-from tavily import TavilyClient
+from langchain_tavily import TavilySearch
+
+
 load_dotenv()
-
-tavily = TavilyClient()
-
-@tool
-def search(query: str) -> str:
-    """Search for information based on a query."""
-    print(f"Searching for: {query}")
-    return tavily.search(query)
 
 
 llm = ChatDeepSeek(
     model="deepseek-chat",
 )
 
-tools = [search]
+tools = [TavilySearch()]
 agent = create_agent(model=llm, tools=tools)
 def main():
     result = agent.invoke({
